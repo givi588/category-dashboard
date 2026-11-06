@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A lightweight category dashboard to organize items, track totals, and export a CSV report.">
+  <title>Category Dashboard</title>
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+  <script src="data.js?v=1.0.0" defer></script>
+  <script src="script.js?v=1.0.0" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to dashboard</a>
+  <div class="container">
+    <header class="hero">
+      <div>
+        <span class="eyebrow">JavaScript portfolio project</span>
+        <h1>Category Dashboard</h1>
+        <p>Keep your categories organized, update item counts, and review everything in one place.</p>
+      </div>
+      <button class="button secondary-button" id="background-button" type="button" aria-label="Switch to dark mode">Dark mode</button>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <noscript>This dashboard requires JavaScript. Your saved browser data has not been changed.</noscript>
+      <p id="storage-warning" class="storage-warning" role="alert"></p>
+      <section class="dashboard" aria-labelledby="dashboard-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="dashboard-heading">Overview</h2>
+            <p class="section-description">A quick look at your saved categories.</p>
+          </div>
+          <div class="button-group data-actions">
+            <button class="button secondary-button" id="backup-button" type="button">Back up JSON</button>
+            <button class="button secondary-button" id="import-button" type="button">
+              Import file
+            </button>
+            <input id="import-file" class="visually-hidden" type="file" accept=".csv,.json,text/csv,application/json" tabindex="-1" aria-label="Select CSV or JSON backup to restore">
+          <button class="button secondary-button" id="export-button" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4M5 17v3h14v-3"/></svg>
+            Export CSV
+          </button>
+          </div>
+        </div>
+        <p class="field-help">Saved in this browser only. Use JSON for exact backups; CSV is a spreadsheet report.</p>
+        <p id="import-message" class="form-message" role="status" aria-live="polite"></p>
+        <div class="dashboard-grid">
+          <div class="stat-card"><p class="stat-label">Categories</p><p class="stat-value" id="total-categories">0</p></div>
+          <div class="stat-card"><p class="stat-label">Total items</p><p class="stat-value" id="total-items">0</p></div>
+          <div class="stat-card"><p class="stat-label">Largest category</p><p class="stat-value stat-name" id="largest-category">None</p></div>
+        </div>
+        <div class="chart-section">
+          <h3 id="chart-heading">Items by category</h3>
+          <div id="category-chart" role="group" aria-labelledby="chart-heading"></div>
+        </div>
+      </section>
+
+      <div class="workspace">
+        <section class="panel" aria-labelledby="categories-heading">
+          <div class="section-heading">
+            <h2 id="categories-heading">Your categories</h2>
+            <span id="visible-count" class="muted-small" aria-live="polite"></span>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <label for="category-search">Search</label>
+              <input id="category-search" type="search" placeholder="Name or description" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="category-sort">Sort by</label>
+              <select id="category-sort">
+                <option value="default">Default order</option>
+                <option value="az">Name: A–Z</option>
+                <option value="za">Name: Z–A</option>
+                <option value="low">Items: low to high</option>
+                <option value="high">Items: high to low</option>
+              </select>
+            </div>
+          </div>
+          <ul id="category-list" aria-label="Saved categories"></ul>
+        </section>
+
+        <section class="panel editor-panel" aria-labelledby="editor-heading">
+          <h2 id="editor-heading">Add a category</h2>
+          <p class="section-description" id="editor-description">Enter the details below. You can change them later.</p>
+          <form id="category-form" novalidate>
+            <div class="form-field">
+              <label for="new-category">Category name <span class="required" aria-hidden="true">*</span></label>
+              <input id="new-category" name="name" type="text" maxlength="30" required placeholder="e.g. Books" autocomplete="off" aria-describedby="category-help category-message">
+              <p class="field-help" id="category-help">Up to 30 characters; names must be unique.</p>
+            </div>
+            <div class="form-field">
+              <label for="category-description">Description</label>
+              <textarea aria-describedby="category-message" id="category-description" name="description" rows="3" maxlength="120" placeholder="What does this category contain?"></textarea>
+            </div>
+            <div class="form-field">
+              <label for="category-items">Number of items</label>
+              <input aria-describedby="category-message" id="category-items" name="items" type="number" min="0" max="1000000" step="1" value="0" required>
+            </div>
+            <div class="button-group">
+              <button class="button" id="save-category-button" type="submit">Add category</button>
+              <button class="button secondary-button hidden" id="cancel-edit-button" type="button">Cancel</button>
+            </div>
+            <p id="category-message" class="form-message" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
+      <section class="panel recovery-panel" aria-labelledby="deleted-heading">
+        <div class="section-heading">
+          <h2 id="deleted-heading" tabindex="-1">Recently deleted <span id="deleted-count" class="muted-small">0</span></h2>
+        </div>
+        <ul id="deleted-list" aria-label="Deleted categories"></ul>
+        <details>
+          <summary>Data recovery</summary>
+          <p class="section-description">Each successful change keeps one previous save. Restore it to undo the last change or import. Export a JSON backup for long-term protection.</p>
+          <div class="button-group recovery-actions">
+            <button class="button secondary-button" id="recover-button" type="button">Restore previous save</button>
+            <button class="button secondary-button" id="raw-backup-button" type="button">Download stored data</button>
+          </div>
+          <p class="field-help">Stored-data downloads are for manual recovery and cannot be imported directly. No data is sent to a server.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <span>Category Dashboard v1.0 · HTML, CSS &amp; JavaScript.</span>
+      <a href="https://github.com/givi588/my-first-website">View source on GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
