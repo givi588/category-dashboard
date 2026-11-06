@@ -17,10 +17,10 @@ A completed vanilla JavaScript portfolio dashboard with safer local data handlin
 
 ## Installation
 
-Use the existing GitHub Pages URL, or download `category-dashboard-v1.0.0.zip` and serve its contents using any static HTTP server. No runtime dependencies or account setup are needed.
+Use the [public dashboard](https://givi588.github.io/category-dashboard/), or download the deployable static files from the repository and serve them using any HTTP server. No runtime dependencies or account setup are needed.
 
 ## Existing users
 
 The original local data is read without being changed. The first successful edit writes the new versioned state and keeps a previous snapshot. Export JSON regularly; browser storage and recovery copies disappear if you clear site data. CSV is a spreadsheet format, not a lossless backup. Use one editing tab; there is no cross-device sync, encryption, or unlimited history.
 
-See TESTING.md and the release commit's GitHub Actions run for executed checks and limitations. Passing automated accessibility checks is not a full manual assistive-technology audit.
+See [TESTING.md](../TESTING.md) and the repository's [GitHub Actions runs](https://github.com/givi588/category-dashboard/actions) for executed checks and limitations. Passing automated accessibility checks is not a full manual assistive-technology audit.
