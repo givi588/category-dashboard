@@ -1,4 +1,4 @@
-# Category Dashboard v1.0
+# Category Dashboard 2.0
 
 A small, dependable category manager built with **HTML, CSS, and vanilla JavaScript**. Organize categories, track totals, and keep control of your data without accounts, analytics, or a backend.
 
@@ -15,7 +15,7 @@ A small, dependable category manager built with **HTML, CSS, and vanilla JavaScr
 - Errors remain visible; corrupt data, quota failures and stale tabs do not silently replace the saved list.
 - Responsive light/dark themes, keyboard navigation, explicit form labels, invalid-field feedback, and live status messages.
 
-The visual design retains neutral surfaces, one accent color, and simple spacing. No runtime dependencies, web fonts, external APIs, or decorative animations.
+A navy SaaS workspace brings together overview cards, category analytics, management, backup, and recovery. A collapsible mobile sidebar supports keyboard navigation and Escape. New visitors start in dark mode; saved light/dark preferences remain unchanged. No runtime dependencies, web fonts, external APIs, or decorative animations.
 
 ## Start using it
 
@@ -28,9 +28,9 @@ Data belongs to this browser and origin. **Clearing site data or losing the devi
 
 ## Interface
 
-![Category Dashboard v1.0 desktop interface](screenshots/v1-desktop.png)
+Screenshots for the 2.0 interface are produced by the browser test suite at 320, 360, 768, and 1280 pixels in both themes.
 
-[Mobile screenshot at 320px](screenshots/v1-mobile.png). These are actual browser screenshots of the application, not design mockups.
+The `screenshots/v1-*` files are retained as the historical 1.0 interface, not evidence of 2.0.
 
 ## Develop locally
 
@@ -64,6 +64,7 @@ The suite starts its own server on port 8080. It uses isolated browser contexts 
 | `style.css` | Responsive layout, themes, focus and error states |
 | `data.js` | Validation, storage transactions, recovery and CSV/JSON codecs; shared with Node tests |
 | `script.js` | DOM rendering, forms, download/upload interactions and theme preference |
+| `navigation.js` | Collapsible sidebar, anchor navigation and keyboard focus; no storage writes |
 | `scripts/build.cjs` | Copies only public application files into `dist/` |
 | `tests/*.test.cjs` | Domain and simulated-DOM regression tests |
 | `tests/e2e/dashboard.spec.cjs` | Real Chromium, Firefox and WebKit browser checks |
@@ -78,3 +79,7 @@ GitHub Actions runs syntax, unit, build and browser checks. GitHub Pages serves 
 ## Data limits
 
 Names: 1–30 characters after trimming, unique without regard to case within each list. Descriptions: at most 120 characters. Item counts: whole numbers from 0 to 1,000,000. At most 1,000 active and 1,000 deleted categories; total serialized storage/import limit: 1 MB. Limits are JavaScript string lengths, not grapheme counts. See [data documentation](docs/DATA.md) for CSV tradeoffs, migration, concurrency and recovery details.
+
+## 2.0 compatibility
+
+`data.js` is unchanged. The `category-dashboard:v1`, `category-dashboard:previous`, `categories`, and `theme` keys retain their existing meaning. Opening the redesigned interface does not write category data or migrate saved records. Backup and transfer controls now live in **Data management**; recently deleted entries and previous-save tools are in **Recovery**.
