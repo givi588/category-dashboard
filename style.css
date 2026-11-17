@@ -268,7 +268,7 @@ label { font-size: 12px; }
 .button:hover { background: #3e50b7; }
 .secondary-button, .edit-button { background: var(--subtle); }
 .secondary-button:hover, .edit-button:hover { background: var(--border); }
-.button, .edit-button, .delete-button, nav a { transition: background-color .15s ease, border-color .15s ease; }
+.button, .edit-button, .delete-button, nav a { transition: border-color .15s ease; }
 #category-list li:not(.empty-state) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 19px 0; }
 #category-list h3 { font-size: 14px; grid-column: 1; margin: 0; }
 .category-description { grid-column: 1; margin: 0; font-size: 12px; }

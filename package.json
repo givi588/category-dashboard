@@ -1,6 +1,6 @@
 {
   "name": "category-dashboard",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "A privacy-first, browser-local category dashboard",
   "scripts": {
