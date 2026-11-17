@@ -28,7 +28,11 @@ Data belongs to this browser and origin. **Clearing site data or losing the devi
 
 ## Interface
 
-Screenshots for the 2.0 interface are produced by the browser test suite at 320, 360, 768, and 1280 pixels in both themes.
+![Category Dashboard 2.0 dark desktop](screenshots/v2-desktop-dark.png)
+
+[Mobile dark](screenshots/v2-mobile-dark.png) · [Desktop light](screenshots/v2-desktop-light.png) · [Mobile light](screenshots/v2-mobile-light.png)
+
+Actual Chromium screenshots from the passing 2.0 browser suite. The full suite captures 320, 360, 768, and 1280 pixel layouts in both themes.
 
 The `screenshots/v1-*` files are retained as the historical 1.0 interface, not evidence of 2.0.
 
