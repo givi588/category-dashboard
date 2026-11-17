@@ -143,7 +143,7 @@ test("search filters visible categories", () => {
 test("dark theme persists, and export creates a download", () => {
   const app = createApp();
   app.fire("background-button", "click");
-  assert.equal(app.get("background-button").textContent, "Light mode");
+  assert.equal(app.get("background-button").textContent, "Dark mode");
   app.fire("export-button", "click");
   assert.equal(app.exportsCount(), 1);
 });
@@ -159,7 +159,7 @@ test("saved data and theme survive a fresh page load", () => {
   const refreshed = createApp(true, memory);
   assert.equal(refreshed.get("total-categories").textContent, "4");
   assert.equal(refreshed.get("total-items").textContent, "41");
-  assert.equal(refreshed.get("background-button").textContent, "Light mode");
+  assert.equal(refreshed.get("background-button").textContent, "Dark mode");
 });
 
 test("submitting the same category twice does not create duplicates", () => {
