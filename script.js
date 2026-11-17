@@ -409,7 +409,7 @@ function recoverPrevious() {
 
 function loadTheme() {
   try {
-    if (storage.getItem(THEME_KEY) === "dark") {
+    if (storage.getItem(THEME_KEY) !== "light") {
       document.body.classList.add("dark-mode");
     }
   } catch (error) {

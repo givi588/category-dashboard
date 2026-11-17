@@ -43,3 +43,15 @@ An earlier run stalled while Ubuntu downloaded OS dependencies. CI now uses the 
 - Quota/permission failures are simulated, not tests against every browser's real disk-full/private-browsing policy.
 - localStorage and its previous snapshot are not a durable remote backup. Clearing origin data removes them.
 - Web Locks coordinates participating app tabs on supported secure origins. Fallback storage comparisons do not provide a database transaction or serialize unrelated scripts.
+
+## Dashboard 2.0 verification
+
+- Local `npm ci`, `npm run check`, `npm test` (38 tests), and `npm run build` pass.
+- New browser regressions cover mobile menu keyboard/anchor/Escape behavior and unchanged saved bytes through navigation and theme changes.
+- The existing four-width, two-theme accessibility/screenshot matrix remains in place.
+- Local Playwright downloads returned invalid archives; system Chromium cannot launch because this environment blocks its required socket operation. The full suite subsequently passed in GitHub Actions.
+- Tests use isolated browser contexts; no live user browser storage is accessed.
+- [Verified Actions run](https://github.com/givi588/category-dashboard/actions/runs/44181480802): **38 unit tests and 51 browser tests passed**, across Chromium, Firefox and WebKit. All four requested widths passed overflow and automated WCAG A/AA scans in both themes.
+- Real desktop and mobile captures in `screenshots/v2-*` were downloaded from that run and visually reviewed.
+- Browser review found and resolved the local navigation script route and transient contrast loss during theme switching. Background theme transitions were removed rather than weakening the accessibility assertions.
+- Remaining limits: automated accessibility is not a complete manual assistive-technology audit; browser-local data does not synchronize across devices.

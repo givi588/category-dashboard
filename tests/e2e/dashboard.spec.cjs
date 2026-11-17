@@ -19,6 +19,8 @@ test.beforeEach(async ({ page }) => {
   page.on('pageerror', error => errors.push(error.message));
   page.__errors = errors;
   await page.goto('/');
+  await page.evaluate(() => localStorage.setItem('theme', 'light'));
+  await page.reload();
 });
 test.afterEach(async ({ page }) => { expect(page.__errors).toEqual([]); });
 
@@ -178,4 +180,32 @@ test('permanent deletion and empty-state import can be undone with previous save
   await page.reload();
   await expect(page.locator('#total-categories')).toHaveText('0');
   await expect(page.locator('#category-chart')).toContainText('No categories yet');
+});
+
+test('mobile navigation supports keyboard, anchors and Escape', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  const menu = page.getByRole('button', { name: 'Menu', exact: true });
+  await expect(page.getByRole('navigation')).toBeHidden();
+  await menu.focus();
+  await page.keyboard.press('Enter');
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await page.getByRole('link', { name: 'Data management', exact: false }).click();
+  await expect(page.locator('#data-management')).toBeFocused();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  await menu.click();
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeFocused();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('redesign leaves all saved bytes intact on load, navigation and theme change', async ({ page }) => {
+  const saved = { 'category-dashboard:v1': JSON.stringify(fixture), 'category-dashboard:previous': '{previous raw bytes}', categories: '[]' };
+  await page.evaluate(saved => { for (const [key, value] of Object.entries(saved)) localStorage.setItem(key, value); localStorage.removeItem('theme'); }, saved);
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Switch to light mode' })).toBeVisible();
+  await page.getByRole('link', { name: 'Analytics', exact: false }).click();
+  await page.getByRole('button', { name: 'Switch to light mode' }).click();
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toBeVisible();
+  expect(await page.evaluate(saved => Object.fromEntries(Object.keys(saved).map(key => [key, localStorage.getItem(key)])), saved)).toEqual(saved);
 });
