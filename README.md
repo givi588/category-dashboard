@@ -107,8 +107,8 @@ Open `http://127.0.0.1:8080` in a separate browser profile for an isolated revie
 
 - Compact graphite and mint layout based on the approved reference.
 - Four actual statistics, including average items per category (one decimal place).
-- Vertical chart with Top 8 / All Categories controls; horizontal scrolling stays inside the chart on narrow screens.
-- Semantic category table, five-row pagination, synchronized header/table search, and sorting.
+- The Top 8 / All Categories chart uses vertical bars on desktop and labeled horizontal bars below 600 px.
+- Semantic category table with compact mobile cards, five-row pagination, synchronized header/table search, and sorting.
 - Native modal editor with keyboard focus containment, Escape cancellation and focus restoration.
 - Collapsible data management and recovery panels, accessible from the sidebar.
 - Genuine local activity, starting with actions taken in 2.1. No historical growth or fictional accounts.

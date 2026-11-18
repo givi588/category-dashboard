@@ -24,7 +24,7 @@ These are browser captures of the implemented application, not generated mockups
 
 The implementation follows the reference's 240 px sidebar, compact 64 px header, four-card statistics row, approximately 1.6:1 chart/activity split, graphite surfaces, restrained mint controls, outline icons, and wide category table.
 
-The first browser captures were inspected at desktop and mobile sizes. Review identified overly tall table rows, undersized chart labels, non-rounded chart ticks, and a screenshot scroll-position artifact after accessibility scanning. The second iteration reduced row padding, strengthened section headings, increased chart label/plot sizing, introduced readable tick intervals and a restrained teal bar treatment, and normalized capture position. Mobile activity timestamps wrap below the event text, and the table includes a horizontal-scroll hint. A further review corrected clipping above the tallest bar, expanded chart-label room, and tightened activity rows. Browser checks also found and corrected activity-region keyboard scrolling, an asynchronous editor-save race, and reverse keyboard traversal in the editor.
+The first browser captures were inspected at desktop and mobile sizes. Review identified overly tall table rows, undersized chart labels, non-rounded chart ticks, and a screenshot scroll-position artifact after accessibility scanning. The second iteration reduced row padding, strengthened section headings, increased chart label/plot sizing, introduced readable tick intervals and a restrained teal bar treatment, and normalized capture position. Mobile activity timestamps wrap below the event text, and the initial mobile table included a horizontal-scroll hint. A further review corrected clipping above the tallest bar, expanded chart-label room, and tightened activity rows. Browser checks also found and corrected activity-region keyboard scrolling, an asynchronous editor-save race, and reverse keyboard traversal in the editor.
 
 Functional differences from the illustration are intentional:
 
@@ -35,7 +35,7 @@ Functional differences from the illustration are intentional:
 | Growth percentages and date filter | Current totals, largest category, average; no invented time series |
 | Historical update dates | Recorded timestamps for matching category snapshots; otherwise “Not recorded” |
 | Fictional recent events | Actions successfully performed in this browser after upgrading |
-| Large desktop table | Same semantic table with internal horizontal scrolling on small screens |
+| Large desktop table | Below 600 px each row becomes a card with the item count and 44 px Edit/Delete controls in view |
 
 The layout is closely reference-led, not a claim of pixel identity: real category names, browser typography, accurate metrics and required data tools affect the result.
 
