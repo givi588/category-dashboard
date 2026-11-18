@@ -200,7 +200,7 @@ function deleteCategory(index) {
   const category = categories[index];
   if (!category) return;
   if (trash.length >= Data.MAX_CATEGORIES || trash.some(item => item.name.toLowerCase() === category.name.toLowerCase())) {
-    setMessage("Restore or permanently remove the matching deleted category first. Deleted categories are limited to 1,000.", "error");
+    setImportMessage("Restore or permanently remove the matching deleted category first. Deleted categories are limited to 1,000.", "error");
     return;
   }
   if (!confirm('Move "' + category.name + '" to Recently deleted? You can restore it later.')) return;
@@ -292,8 +292,10 @@ function renderChart() {
   const limit = document.getElementById("chart-limit").value;
   const plotted = categories.slice().sort((a, b) => b.items - a.items).slice(0, limit === "all" ? categories.length : 8);
   const maximum = Math.max(1, ...plotted.map(category => category.items));
-  const step = Math.max(1, Math.ceil(maximum / 5));
-  const ceiling = step * 6;
+  const magnitude = 10 ** Math.floor(Math.log10(maximum / 7));
+  const step = Math.max(1, [1, 2, 5, 10].find(value => value * magnitude >= maximum / 7) * magnitude);
+  const ticks = Math.ceil(maximum / step);
+  const ceiling = step * (ticks + 0.5);
   const wrapper = document.createElement("div");
   wrapper.className = "chart";
   wrapper.style.minWidth = (Math.max(0, plotted.length * 62) + 35) + "px";
@@ -305,13 +307,13 @@ function renderChart() {
   const grid = document.createElement("div");
   grid.className = "chart-grid";
   grid.setAttribute("aria-hidden", "true");
-  for (let index = 0; index <= 5; index++) {
+  for (let index = 0; index <= ticks; index++) {
     const label = document.createElement("span");
     label.textContent = (step * index).toLocaleString();
-    label.style.bottom = (index / 6 * 100) + "%";
+    label.style.bottom = (index * step / ceiling * 100) + "%";
     axis.append(label);
     const line = document.createElement("span");
-    line.style.bottom = (index / 6 * 100) + "%";
+    line.style.bottom = (index * step / ceiling * 100) + "%";
     grid.append(line);
   }
   const columns = document.createElement("div");
@@ -573,7 +575,12 @@ function toggleTheme() {
 
 form.addEventListener("submit", event => {
   event.preventDefault();
-  runExclusive(() => submitCategory(event));
+  saveButton.disabled = true;
+  form.setAttribute("aria-busy", "true");
+  Promise.resolve(runExclusive(() => submitCategory(event))).finally(() => {
+    saveButton.disabled = false;
+    form.setAttribute("aria-busy", "false");
+  });
 });
 cancelButton.addEventListener("click", () => {
   editorDialog.close();
@@ -587,7 +594,7 @@ document.getElementById("global-search").addEventListener("keydown", event => { 
 document.getElementById("chart-limit").addEventListener("change", renderChart);
 document.getElementById("add-category-button").addEventListener("click", () => { resetEditor(); setMessage(""); openEditor(); });
 document.getElementById("close-editor").addEventListener("click", () => editorDialog.close());
-editorDialog.addEventListener("close", () => { resetEditor(); setMessage(""); });
+editorDialog.addEventListener("close", () => { if (!editorDialog.open) { resetEditor(); setMessage(""); } });
 document.getElementById("activity-toggle").addEventListener("click", () => {
   showAllActivity = !showAllActivity;
   document.querySelector(".activity-panel").classList.toggle("expanded");

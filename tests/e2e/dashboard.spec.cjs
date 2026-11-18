@@ -9,6 +9,7 @@ async function add(page, name = 'Books', items = '8', description = 'Novels') {
   await page.getByLabel('Description', { exact: true }).fill(description);
   await page.getByLabel('Number of items').fill(items);
   await page.getByRole('button', { name: 'Add category', exact: true }).click();
+  await expect(page.locator('#category-form')).toHaveAttribute('aria-busy', 'false');
 }
 async function upload(page, text, name = 'backup.json') {
   await page.locator('#import-file').setInputFiles({ name, mimeType: name.endsWith('.csv') ? 'text/csv' : 'application/json', buffer: Buffer.from(text) });
@@ -169,6 +170,7 @@ for (const width of [320, 375, 768, 1440]) {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
       expect(results.violations).toEqual([]);
+      await page.evaluate(() => { document.activeElement.blur(); window.scrollTo(0, 0); });
       await page.screenshot({ path: testInfo.outputPath(`${width}-${theme}.png`), fullPage: true });
     }
   });
@@ -197,7 +199,7 @@ test('permanent deletion and empty-state import can be undone with previous save
 test('mobile navigation supports keyboard, anchors and Escape', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   const menu = page.getByRole('button', { name: 'Menu', exact: true });
-  await expect(page.getByRole('navigation')).toBeHidden();
+  await expect(page.getByRole('navigation', { name: 'Workspace navigation' })).toBeHidden();
   await menu.focus();
   await page.keyboard.press('Enter');
   await expect(menu).toHaveAttribute('aria-expanded', 'true');
@@ -225,6 +227,11 @@ test('redesign leaves all saved bytes intact on load, navigation and theme chang
 test('dialog traps focus, cancels on Escape, and records only saved activity', async ({ page }) => {
   await page.locator('#add-category-button').click();
   await expect(page.getByLabel('Category name')).toBeFocused();
+  await page.getByRole('button', { name: 'Close category editor' }).focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Close category editor' })).toBeFocused();
   await page.getByLabel('Category name').fill('Unsaved');
   await page.keyboard.press('Escape');
   await expect(page.locator('#category-dialog')).not.toBeVisible();
@@ -259,6 +266,7 @@ test('reference comparison screenshots with explicitly imported sample inventory
   for (const name of ['Home Office', 'Electronics', 'Accessories']) {
     await page.locator('#category-list tr').filter({ has: page.getByRole('heading', { name, exact: true }) }).getByRole('button', { name: 'Edit', exact: true }).click();
     await page.getByRole('button', { name: 'Save changes', exact: true }).click();
+    await expect(page.locator('#category-dialog')).not.toBeVisible();
   }
   await page.reload();
   for (const width of [1440, 375, 320, 768]) {
@@ -269,6 +277,7 @@ test('reference comparison screenshots with explicitly imported sample inventory
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
       expect(results.violations).toEqual([]);
+      await page.evaluate(() => { document.activeElement.blur(); window.scrollTo(0, 0); });
       await page.screenshot({ path: testInfo.outputPath(`reference-${width}-${theme}.png`), fullPage: true });
     }
   }
