@@ -35,6 +35,8 @@ class FakeElement {
   replaceChildren(...nodes) { this.children = nodes; }
   setAttribute(key, value) { this[key] = value; }
   removeAttribute(key) { delete this[key]; }
+  showModal() { this.open = true; }
+  close() { this.open = false; }
   focus() {}
   scrollIntoView() {}
   reset() {}
@@ -75,6 +77,7 @@ function createApp(confirmDelete = true, sharedMemory = new Map()) {
   };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "data.js"), "utf8"), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, "..", "activity.js"), "utf8"), context);
   vm.runInContext(script, context, { filename: "script.js" });
   const fire = (id, type) => get(id).handlers[type]({ preventDefault() {} });
   const saved = () => memory.has("category-dashboard:v1") ? JSON.parse(memory.get("category-dashboard:v1")).categories : null;
@@ -114,7 +117,7 @@ test("duplicate names and invalid quantities are rejected", () => {
 
 test("inline editing changes the selected category and totals", () => {
   const app = createApp();
-  const edit = app.get("category-list").children[0].children[3].children[0];
+  const edit = app.get("category-list").children[0].children[4].children[0].children[0];
   edit.handlers.click();
   assert.equal(app.get("editor-heading").textContent, "Edit category");
   app.get("new-category").value = "Board games";
@@ -126,7 +129,7 @@ test("inline editing changes the selected category and totals", () => {
 
 test("deleting a category updates the dashboard", () => {
   const app = createApp();
-  const remove = app.get("category-list").children[0].children[3].children[1];
+  const remove = app.get("category-list").children[0].children[4].children[0].children[1];
   remove.handlers.click();
   assert.equal(app.get("total-categories").textContent, "2");
   assert.equal(app.get("total-items").textContent, "22");
@@ -173,7 +176,7 @@ test("submitting the same category twice does not create duplicates", () => {
 
 test("cancelling an edit leaves stored data unchanged", () => {
   const app = createApp();
-  const edit = app.get("category-list").children[0].children[3].children[0];
+  const edit = app.get("category-list").children[0].children[4].children[0].children[0];
   edit.handlers.click();
   app.get("new-category").value = "Changed name";
   app.fire("cancel-edit-button", "click");
@@ -184,7 +187,7 @@ test("cancelling an edit leaves stored data unchanged", () => {
 
 test("cancelling a deletion preserves the category", () => {
   const app = createApp(false);
-  const remove = app.get("category-list").children[0].children[3].children[1];
+  const remove = app.get("category-list").children[0].children[4].children[0].children[1];
   remove.handlers.click();
   assert.equal(app.get("total-categories").textContent, "3");
 });
@@ -204,7 +207,7 @@ test("sorting by item count changes visible order", () => {
   const app = createApp();
   app.get("category-sort").value = "low";
   app.fire("category-sort", "change");
-  assert.equal(app.get("category-list").children[0].children[0].textContent, "Movies");
+  assert.equal(app.get("category-list").children[0].children[0].children[0].children[1].textContent, "Movies");
 });
 
 test("CSV exports spreadsheet formulas as text", () => {
@@ -250,7 +253,7 @@ test("CSV import parser rejects unsafe quantities and malformed quotes", () => {
 test('deleted category survives reload and can be restored', () => {
   const memory = new Map();
   const first = createApp(true, memory);
-  first.get('category-list').children[0].children[3].children[1].handlers.click();
+  first.get('category-list').children[0].children[4].children[0].children[1].handlers.click();
   const next = createApp(true, memory);
   assert.equal(next.get('deleted-count').textContent, '1');
   next.get('deleted-list').children[0].children[1].children[0].handlers.click();
@@ -267,7 +270,7 @@ test('previous save captures pre-edit values and restores the dashboard', () => 
 });
 test('restoring a duplicate name leaves trash intact', () => {
   const app = createApp();
-  app.get('category-list').children[0].children[3].children[1].handlers.click();
+  app.get('category-list').children[0].children[4].children[0].children[1].handlers.click();
   app.get('new-category').value = 'gaming';
   app.fire('category-form', 'submit');
   app.get('deleted-list').children[0].children[1].children[0].handlers.click();
@@ -307,7 +310,7 @@ test('queued double deletion cannot delete a different category after indexes sh
   const app = createApp();
   const queue = [];
   app.context.window.navigator = { locks: { request: (_, callback) => { queue.push(callback); return Promise.resolve(); } } };
-  const remove = app.get('category-list').children[0].children[3].children[1];
+  const remove = app.get('category-list').children[0].children[4].children[0].children[1];
   remove.handlers.click();
   remove.handlers.click();
   queue.forEach(action => action());

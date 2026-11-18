@@ -50,3 +50,9 @@ The previous save is **one step**, not an unlimited history. JSON exports are th
 ## Multiple tabs
 
 A `storage` event warns about external changes; saves compare the raw value with the value loaded by that tab. Stale tabs cannot silently overwrite an already-observed newer save. Export the stale view if useful, then reload. On supported secure origins, Web Locks serializes writers from this app across tabs; the stale-value check runs inside the lock. When Web Locks is unavailable, localStorage has no atomic compare-and-swap, so perfectly simultaneous writes cannot be fully serialized. Older versions or unrelated scripts do not participate in this lock. Prefer one editing tab. Offline use means an already loaded page can keep working; there is no service worker or guaranteed offline navigation.
+
+## Optional 2.1 activity history
+
+`category-dashboard:activity:v1` contains `{version: 1, events: [...]}`. Each event stores a kind, an ISO timestamp, and an optional category snapshot. The 100-event bound affects this new UI history only; it never truncates categories, trash, or the previous save. Reads are non-mutating. Unrecognized, malformed, or oversized logs remain untouched. The log re-reads current stored events before an append; mutation handlers use the existing Web Lock where supported.
+
+No timestamps are inferred for existing categories. Imports and previous-save restoration form a boundary for per-category timestamp lookup. Exact CSV/JSON category backup formats remain unchanged, and do not export the optional log. A JSON download request is recorded only when the browser download can be initiated; successful disk persistence cannot be observed.

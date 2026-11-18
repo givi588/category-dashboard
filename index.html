@@ -1,93 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A lightweight category dashboard to organize items, track totals, and export a CSV report.">
-  <title>Category Dashboard</title>
-  <link rel="stylesheet" href="style.css?v=2.0.0">
-  <script src="data.js?v=2.0.0" defer></script>
-  <script src="script.js?v=2.0.0" defer></script>
-  <script src="navigation.js?v=2.0.0" defer></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A private, browser-local category workspace with inventory analytics, backups and recovery.">
+<title>Category Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%2370c8ae' stroke-width='2' d='m3 7 9-4 9 4-9 4-9-4Zm0 5 9 4 9-4M3 17l9 4 9-4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=2.1.0">
+<script src="data.js?v=2.1.0" defer></script><script src="activity.js?v=2.1.0" defer></script>
+<script src="script.js?v=2.1.0" defer></script><script src="navigation.js?v=2.1.0" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to dashboard</a>
-  <aside class="sidebar" aria-label="Workspace sidebar">
-    <a class="brand" href="#main-content"><span class="brand-mark" aria-hidden="true">C</span><span>Category<span class="brand-subtitle">WORKSPACE</span></span></a>
-    <button class="button secondary-button nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="workspace-nav" type="button">Menu</button>
-    <nav id="workspace-nav" aria-label="Workspace navigation">
-      <p class="nav-label">WORKSPACE</p>
-      <a href="#overview" aria-current="location"><span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span> Overview</a>
-      <a href="#analytics"><span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10m8 10V4m8 16V8"/></svg></span> Analytics</a>
-      <a href="#categories"><span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 10v10"/></svg></span> Categories</a>
-      <a href="#data-management"><span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v16m-4-4 4 4 4-4M17 21V5m-4 4 4-4 4 4"/></svg></span> Data management</a>
-      <a href="#recovery"><span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6"/></svg></span> Recovery</a>
-      <div class="sidebar-note"><span class="status-dot"></span> Private by design<p>Your workspace stays in this browser. Back up to keep it safe.</p></div>
-      <a class="source-link" href="https://github.com/givi588/category-dashboard">View source <span aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></a>
-    </nav>
-  </aside>
-  <div class="container">
-    <header class="hero">
-      <div>
-        <span class="eyebrow">Your workspace, at a glance</span>
-        <h1>Category Dashboard<span class="version-badge">2.0</span></h1>
-        <p>A clear view of your categories. More room to focus.</p>
-      </div>
-      <button class="button secondary-button" id="background-button" type="button" aria-label="Switch to dark mode">Dark mode</button>
-    </header>
-
-    <main id="main-content" tabindex="-1">
-      <noscript>This dashboard requires JavaScript. Your saved browser data has not been changed.</noscript>
-        <p id="import-message" class="form-message" role="status" aria-live="polite"></p>
-      <p id="storage-warning" class="storage-warning" role="alert"></p>
-      <section id="overview" class="dashboard" aria-labelledby="dashboard-heading">
-        <div class="section-heading">
-          <div>
-            <h2 id="dashboard-heading">Overview</h2>
-            <p class="section-description">A quick look at your saved categories.</p>
+<a class="skip-link" href="#main-content">Skip to dashboard</a>
+<aside class="sidebar" aria-label="Workspace sidebar">
+<a class="brand" href="#overview"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 9-4 9 4-9 4-9-4Zm0 5 9 4 9-4M3 17l9 4 9-4"/></svg><span>Category Manager</span></a>
+<button class="button secondary-button nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="workspace-nav" type="button">Menu</button>
+<nav id="workspace-nav" aria-label="Workspace navigation"><a href="#overview" aria-current="location"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10h-6v-7H9v7H3Z"/></svg>Dashboard</a><a href="#categories"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h8l10 10-8 8L3 11Z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Categories</a><a href="#analytics"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V12h3v8Zm7 0V7h3v13Zm7 0V3h3v17Z"/></svg>Analytics</a><a href="#data-management"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v16m-4-4 4 4 4-4M17 21V5m-4 4 4-4 4 4"/></svg>Data Management</a><a href="#recovery"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6"/></svg>Recovery</a></nav>
+<div class="workspace-status"><strong><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-6"/></svg>Local workspace</strong><p>Your data stays in this browser.</p><p id="backup-status">No JSON export recorded</p><a href="#data-management">Manage backups <span aria-hidden="true">↗</span></a></div>
+</aside>
+<div class="app-shell">
+<header class="topbar"><div class="top-search"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><label class="visually-hidden" for="global-search">Search workspace categories</label><input id="global-search" type="search" placeholder="Search your categories…" autocomplete="off"><kbd aria-hidden="true">⌘ K</kbd></div><div class="top-actions"><span class="local-label"><span class="status-dot"></span>Local workspace</span><button class="button secondary-button" id="background-button" type="button" aria-label="Switch to light mode">Light mode</button></div></header>
+<main id="main-content" tabindex="-1">
+<noscript>This dashboard requires JavaScript. Your saved data has not been changed.</noscript>
+<div class="page-heading" id="overview"><div><h1>Category Dashboard</h1><p>Manage categories, review your inventory, and keep everything organized.</p></div><span class="snapshot-label">Current snapshot</span></div>
+<p id="storage-warning" class="storage-warning" role="alert"></p><p id="import-message" class="form-message" role="status" aria-live="polite"></p>
+<section class="dashboard-grid" aria-label="Workspace statistics"><article class="stat-card"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h8l10 10-8 8L3 11Z"/><circle cx="7.5" cy="7.5" r="1"/></svg></span><div><p class="stat-label">Total Categories</p><p class="stat-value" id="total-categories">0</p><p class="stat-caption">Active in your workspace</p></div></article><article class="stat-card"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 9-4 9 4v10l-9 4-9-4Zm0 0 9 5 9-5M12 12v9"/></svg></span><div><p class="stat-label">Total Items</p><p class="stat-value" id="total-items">0</p><p class="stat-caption">Across all categories</p></div></article><article class="stat-card"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V12h3v8Zm7 0V7h3v13Zm7 0V3h3v17Z"/></svg></span><div><p class="stat-label">Largest Category</p><p class="stat-value" id="largest-category">0</p><p class="stat-caption">Highest item count</p></div></article><article class="stat-card"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 7 9-4 9 4-9 4-9-4Zm0 5 9 4 9-4M3 17l9 4 9-4"/></svg></span><div><p class="stat-label">Avg. Items per Category</p><p class="stat-value" id="average-items">0</p><p class="stat-caption">Based on current inventory</p></div></article></section>
+<div class="analytics-grid" id="analytics">
+<section class="panel chart-panel" aria-labelledby="chart-heading"><div class="section-heading"><div><h2 id="chart-heading">Items by Category</h2><p>Number of items in each category</p></div><div><label class="visually-hidden" for="chart-limit">Chart categories</label><select id="chart-limit"><option value="8">Top 8 Categories</option><option value="all">All Categories</option></select></div></div>
+<div id="category-chart" role="group" tabindex="0" aria-labelledby="chart-heading"></div>
+</section>
+<section class="panel activity-panel" aria-labelledby="activity-heading"><div class="section-heading"><div><h2 id="activity-heading">Recent Activity</h2><p>Latest changes in this browser</p></div><button class="text-button" id="activity-toggle" type="button" aria-expanded="false">View all</button></div><p id="activity-warning" role="status" class="field-help"></p><ul id="activity-list" tabindex="0" aria-label="Recent activity"></ul></section>
+</div>
+<section id="categories" class="panel management-panel" aria-labelledby="categories-heading"><div class="section-heading"><div><h2 id="categories-heading">Category Management</h2><p>View, add, edit, and organize your categories.</p></div><button class="button" id="add-category-button" type="button"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add Category</button></div>
+<div class="table-toolbar"><div class="search-control"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><label class="visually-hidden" for="category-search">Search</label><input id="category-search" type="search" placeholder="Search categories…" autocomplete="off"></div><div class="sort-control"><label for="category-sort">Sort by</label><select id="category-sort"><option value="default">Default order</option><option value="az">Name: A–Z</option><option value="za">Name: Z–A</option><option value="low">Items: low to high</option><option value="high">Items: high to low</option></select></div></div>
+<div class="table-scroll" role="region" aria-label="Category table" tabindex="0"><table><thead><tr><th scope="col">Category</th><th scope="col">Description</th><th scope="col">Total Items</th><th scope="col">Updated</th><th scope="col">Actions</th></tr></thead><tbody id="category-list"></tbody></table></div>
+<div class="table-footer"><span id="visible-count" class="visually-hidden" aria-live="polite"></span><p id="page-summary" aria-live="polite"></p><nav id="pagination" aria-label="Category pages"></nav></div></section>
+<div class="utility-grid">
+<details id="data-management" class="panel utility-panel"><summary><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v16m-4-4 4 4 4-4M17 21V5m-4 4 4-4 4 4"/></svg>Data Management <span>Import, export &amp; backup</span></summary><div class="utility-content">          <div class="button-group data-actions">
+            <button class="button secondary-button" id="backup-button" type="button">Back up JSON</button>
+            <button class="button secondary-button" id="import-button" type="button">
+              Import file
+            </button>
+            <input id="import-file" class="visually-hidden" type="file" accept=".csv,.json,text/csv,application/json" tabindex="-1" aria-label="Select CSV or JSON backup to restore">
+          <button class="button secondary-button" id="export-button" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4M5 17v3h14v-3"/></svg>
+            Export CSV
+          </button>
           </div>
-          <span class="local-badge"><span class="status-dot"></span> Browser-local workspace</span>
-        </div>
-        <div class="dashboard-grid">
-          <div class="stat-card"><p class="stat-label">Total Categories <span class="stat-icon" aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span></p><p class="stat-value" id="total-categories">0</p><p class="stat-caption">Organized in your workspace</p></div>
-          <div class="stat-card"><p class="stat-label">Total Items <span class="stat-icon teal" aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 10v10"/></svg></span></p><p class="stat-value" id="total-items">0</p><p class="stat-caption">Across all active categories</p></div>
-          <div class="stat-card"><p class="stat-label">Largest Category <span class="stat-icon lavender" aria-hidden="true"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg></span></p><p class="stat-value stat-name" id="largest-category">None</p><p class="stat-caption">Your highest item count</p></div>
-        </div>
-        <div id="analytics" class="chart-section">
-          <div class="section-heading"><div><span class="eyebrow">Category breakdown</span><h3 id="chart-heading">Items by category</h3></div><span class="chart-legend"><span class="status-dot"></span> Current inventory</span></div><p class="section-description chart-description">Compare item counts across your active categories.</p>
-          <div id="category-chart" role="group" tabindex="0" aria-labelledby="chart-heading"></div>
-        </div>
-      </section>
+        <p class="field-help">Saved in this browser only. Use JSON for exact backups; CSV is a spreadsheet report.</p>
 
-      <div class="workspace">
-        <section id="categories" class="panel" aria-labelledby="categories-heading">
-          <div class="section-heading">
-            <h2 id="categories-heading">Your categories</h2>
-            <span id="visible-count" class="muted-small" aria-live="polite"></span>
+</div></details>
+<details id="recovery" class="panel utility-panel"><summary><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6"/></svg>Recovery <span>Deleted categories &amp; previous save</span></summary><div class="utility-content"><h2 id="deleted-heading" tabindex="-1">Recently deleted <span id="deleted-count">0</span></h2>        <ul id="deleted-list" aria-label="Deleted categories"></ul>
+        <details>
+          <summary>Data recovery</summary>
+          <p class="section-description">Each successful change keeps one previous save. Restore it to undo the last change or import. Export a JSON backup for long-term protection.</p>
+          <div class="button-group recovery-actions">
+            <button class="button secondary-button" id="recover-button" type="button">Restore previous save</button>
+            <button class="button secondary-button" id="raw-backup-button" type="button">Download stored data</button>
           </div>
-          <div class="field-row">
-            <div class="form-field">
-              <label for="category-search">Search</label>
-              <input id="category-search" type="search" placeholder="Name or description" autocomplete="off">
-            </div>
-            <div class="form-field">
-              <label for="category-sort">Sort by</label>
-              <select id="category-sort">
-                <option value="default">Default order</option>
-                <option value="az">Name: A–Z</option>
-                <option value="za">Name: Z–A</option>
-                <option value="low">Items: low to high</option>
-                <option value="high">Items: high to low</option>
-              </select>
-            </div>
-          </div>
-          <ul id="category-list" aria-label="Saved categories"></ul>
-        </section>
+          <p class="field-help">Stored-data downloads are for manual recovery and cannot be imported directly. No data is sent to a server.</p>
+        </details>
 
-        <section id="editor" class="panel editor-panel" aria-labelledby="editor-heading">
-          <h2 id="editor-heading">Add a category</h2>
-          <p class="section-description" id="editor-description">Enter the details below. You can change them later.</p>
-          <form id="category-form" novalidate>
+</div></details>
+</div>
+<footer><span>Category Dashboard 2.1 · Private by design</span><a href="https://github.com/givi588/category-dashboard">View source on GitHub ↗</a></footer>
+</main>
+</div>
+<dialog id="category-dialog" aria-labelledby="editor-heading" aria-describedby="editor-description"><div class="editor-panel"><div class="section-heading"><h2 id="editor-heading">Add a category</h2><button id="close-editor" class="icon-button" type="button" aria-label="Close category editor">×</button></div><p class="section-description" id="editor-description">Enter the details below. You can change them later.</p>          <form id="category-form" novalidate>
             <div class="form-field">
               <label for="new-category">Category name <span class="required" aria-hidden="true">*</span></label>
               <input id="new-category" name="name" type="text" maxlength="30" required placeholder="e.g. Books" autocomplete="off" aria-describedby="category-help category-message">
@@ -103,48 +81,8 @@
             </div>
             <div class="button-group">
               <button class="button" id="save-category-button" type="submit">Add category</button>
-              <button class="button secondary-button hidden" id="cancel-edit-button" type="button">Cancel</button>
+              <button class="button secondary-button" id="cancel-edit-button" type="button">Cancel</button>
             </div>
             <p id="category-message" class="form-message" role="status" aria-live="polite"></p>
-          </form>
-        </section>
-      </div>
-      <section id="data-management" class="panel data-panel" aria-labelledby="data-heading">
-        <div class="section-heading"><div><span class="eyebrow">Your data, your control</span><h2 id="data-heading">Back up &amp; transfer</h2></div></div>
-          <div class="button-group data-actions">
-            <button class="button secondary-button" id="backup-button" type="button">Back up JSON</button>
-            <button class="button secondary-button" id="import-button" type="button">
-              Import file
-            </button>
-            <input id="import-file" class="visually-hidden" type="file" accept=".csv,.json,text/csv,application/json" tabindex="-1" aria-label="Select CSV or JSON backup to restore">
-          <button class="button secondary-button" id="export-button" type="button">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4M5 17v3h14v-3"/></svg>
-            Export CSV
-          </button>
-          </div>
-        <p class="field-help">Saved in this browser only. Use JSON for exact backups; CSV is a spreadsheet report.</p>
-      </section>
-      <section id="recovery" class="panel recovery-panel" aria-labelledby="deleted-heading">
-        <div class="section-heading">
-          <h2 id="deleted-heading" tabindex="-1">Recently deleted <span id="deleted-count" class="muted-small">0</span></h2>
-        </div>
-        <ul id="deleted-list" aria-label="Deleted categories"></ul>
-        <details>
-          <summary>Data recovery</summary>
-          <p class="section-description">Each successful change keeps one previous save. Restore it to undo the last change or import. Export a JSON backup for long-term protection.</p>
-          <div class="button-group recovery-actions">
-            <button class="button secondary-button" id="recover-button" type="button">Restore previous save</button>
-            <button class="button secondary-button" id="raw-backup-button" type="button">Download stored data</button>
-          </div>
-          <p class="field-help">Stored-data downloads are for manual recovery and cannot be imported directly. No data is sent to a server.</p>
-        </details>
-      </section>
-    </main>
-
-    <footer>
-      <span>Category Dashboard 2.0 · Built for clarity.</span>
-      <a href="https://github.com/givi588/category-dashboard">View source on GitHub</a>
-    </footer>
-  </div>
-</body>
-</html>
+          </form></div></dialog>
+</body></html>

@@ -21,6 +21,7 @@ navigation.addEventListener("click", event => {
   closeNavigation();
   const target = document.querySelector(link.getAttribute("href"));
   if (target) {
+    if (target.tagName === "DETAILS") target.open = true;
     target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
   }
@@ -29,3 +30,12 @@ sidebar.addEventListener("keydown", event => {
   if (event.key === "Escape") closeNavigation(true);
 });
 window.matchMedia("(max-width: 800px)").addEventListener("change", () => closeNavigation());
+
+document.querySelector(".workspace-status a").addEventListener("click", () => { document.getElementById("data-management").open = true; });
+document.addEventListener("keydown", event => {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+    if (document.getElementById("category-dialog").open) return;
+    event.preventDefault();
+    document.getElementById("global-search").focus();
+  }
+});

@@ -55,3 +55,21 @@ An earlier run stalled while Ubuntu downloaded OS dependencies. CI now uses the 
 - Real desktop and mobile captures in `screenshots/v2-*` were downloaded from that run and visually reviewed.
 - Browser review found and resolved the local navigation script route and transient contrast loss during theme switching. Background theme transitions were removed rather than weakening the accessibility assertions.
 - Remaining limits: automated accessibility is not a complete manual assistive-technology audit; browser-local data does not synchronize across devices.
+
+## Dashboard 2.1 verification — 2026-11-18
+
+The review branch is `feature/dashboard-v2-1-visual`; production remains unchanged. All data used below is synthetic and isolated from users' saved browser data.
+
+- `npm ci`, `npm run check`, `npm test` (**43 tests**) and `npm run build` pass locally.
+- Local browser execution is blocked by the workspace's Chromium socket restriction. The actual three-engine browser suite runs in the version-matched Playwright container on GitHub Actions.
+- The final implementation is covered by **63 browser scenarios** (21 each in Chromium, Firefox and WebKit). This includes the original CRUD, validation, search/sort, persistence, CSV/JSON download/upload, deleted recovery, previous-save recovery, corruption/quota handling, stale-tab and untrusted-text cases.
+- New checks cover native modal cancellation, explicit Tab/Shift+Tab wrapping and focus restoration; rapid sequential saves with Web Locks; five-row pagination; synchronized global search; truthful update timestamps; retained activity; and successful category saves with unreadable activity history.
+- The entire browser suite asserts no uncaught page errors or console errors.
+- Default inventory and the reference-comparison fixture both receive overflow and axe WCAG A/AA checks at **320, 375, 768 and 1440 px**, in **light and dark themes**, across all three engines. Modal accessibility is checked separately.
+- The reference fixture is imported through the actual file input and edited through the actual modal. Screenshots show computed metrics and genuine events from those test actions. They are not a snapshot of the owner's live inventory.
+- The saved-byte regression verifies that opening the redesign, navigating and changing theme preserve the primary category, previous-save and legacy values exactly. `data.js` is unchanged from main. Five new unit tests exercise the optional history's read-only initialization, exact snapshot timestamps, bounded history, corruption/future-version preservation and quota failure.
+- Screenshot review prompted two visual corrections: tighter table/heading proportions and readable chart ticks, followed by extra room above chart values and better activity spacing. An accessibility scan's scroll position is normalized before screenshots so fixed/sticky navigation is captured at the page top.
+
+Evidence: [browser workflow](https://github.com/givi588/category-dashboard/actions/runs/44287927590), [visual review and screenshots](docs/VISUAL-REVIEW-v2.1.md), and [pull request #2](https://github.com/givi588/category-dashboard/pull/2).
+
+Remaining limits: automated accessibility does not replace a manual screen-reader audit; viewport emulation does not replace physical-device testing. No hosted branch preview is configured. The PR must remain unmerged and production must remain unchanged until the owner approves the design.
