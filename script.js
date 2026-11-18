@@ -44,7 +44,10 @@ function renderActivity() {
     const symbol = document.createElement("span");
     symbol.className = "activity-symbol";
     symbol.setAttribute("aria-hidden", "true");
-    symbol.textContent = event.kind === "add" ? "+" : event.kind === "recover" || event.kind === "restore" ? "↶" : "◇";
+    const paths = { add: "M12 5v14M5 12h14", edit: "M3 3h8l10 10-8 8L3 11Z", delete: "M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v7m4-7v7", restore: "M3 10a9 9 0 1 1 2 9M3 4v6h6", transfer: "M7 3v16m-4-4 4 4 4-4M17 21V5m-4 4 4-4 4 4" };
+    const path = paths[event.kind] || (["recover"].includes(event.kind) ? paths.restore : event.kind === "purge" ? paths.delete : paths.transfer);
+    // Only fixed application-owned SVG paths are inserted; event content uses textContent.
+    symbol.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="' + path + '"/></svg>';
     const copy = document.createElement("div");
     copy.className = "activity-copy";
     const title = document.createElement("span");

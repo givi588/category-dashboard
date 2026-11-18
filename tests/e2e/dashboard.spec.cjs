@@ -19,6 +19,7 @@ function acceptNext(page) { page.once('dialog', dialog => dialog.accept()); }
 test.beforeEach(async ({ page }) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   page.__errors = errors;
   await page.goto('/');
   await page.evaluate(() => localStorage.setItem('theme', 'light'));
@@ -224,9 +225,11 @@ test('redesign leaves all saved bytes intact on load, navigation and theme chang
   expect(await page.evaluate(saved => Object.fromEntries(Object.keys(saved).map(key => [key, localStorage.getItem(key)])), saved)).toEqual(saved);
 });
 
-test('dialog traps focus, cancels on Escape, and records only saved activity', async ({ page }) => {
+test('dialog traps focus, cancels on Escape, and records only saved activity', async ({ page }, testInfo) => {
   await page.locator('#add-category-button').click();
   await expect(page.getByLabel('Category name')).toBeFocused();
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  await page.screenshot({ path: testInfo.outputPath('category-editor.png') });
   await page.getByRole('button', { name: 'Close category editor' }).focus();
   await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Cancel', exact: true })).toBeFocused();
@@ -281,4 +284,17 @@ test('reference comparison screenshots with explicitly imported sample inventory
       await page.screenshot({ path: testInfo.outputPath(`reference-${width}-${theme}.png`), fullPage: true });
     }
   }
+});
+
+
+test('unreadable optional activity never blocks category saves or overwrites history', async ({ page }) => {
+  const raw = '{unreadable history';
+  await page.evaluate(raw => localStorage.setItem('category-dashboard:activity:v1', raw), raw);
+  await page.reload();
+  await expect(page.locator('#activity-warning')).toContainText('Existing history has not been replaced');
+  await add(page, 'Books');
+  await expect(page.locator('#total-categories')).toHaveText('4');
+  await page.reload();
+  await expect(page.locator('#category-list')).toContainText('Books');
+  expect(await page.evaluate(() => localStorage.getItem('category-dashboard:activity:v1'))).toBe(raw);
 });
