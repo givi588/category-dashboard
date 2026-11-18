@@ -24,7 +24,7 @@ These are browser captures of the implemented application, not generated mockups
 
 The implementation follows the reference's 240 px sidebar, compact 64 px header, four-card statistics row, approximately 1.6:1 chart/activity split, graphite surfaces, restrained mint controls, outline icons, and wide category table.
 
-The first browser captures were inspected at desktop and mobile sizes. Review identified overly tall table rows, undersized chart labels, non-rounded chart ticks, and a screenshot scroll-position artifact after accessibility scanning. The second iteration reduced row padding, strengthened section headings, increased chart label/plot sizing, introduced readable tick intervals and a restrained teal bar treatment, and normalized capture position. Mobile activity timestamps wrap below the event text, and the table includes a horizontal-scroll hint. Browser checks also found and corrected activity-region keyboard scrolling and an asynchronous editor-save race.
+The first browser captures were inspected at desktop and mobile sizes. Review identified overly tall table rows, undersized chart labels, non-rounded chart ticks, and a screenshot scroll-position artifact after accessibility scanning. The second iteration reduced row padding, strengthened section headings, increased chart label/plot sizing, introduced readable tick intervals and a restrained teal bar treatment, and normalized capture position. Mobile activity timestamps wrap below the event text, and the table includes a horizontal-scroll hint. A further review corrected clipping above the tallest bar, expanded chart-label room, and tightened activity rows. Browser checks also found and corrected activity-region keyboard scrolling, an asynchronous editor-save race, and reverse keyboard traversal in the editor.
 
 Functional differences from the illustration are intentional:
 
@@ -45,4 +45,4 @@ The layout is closely reference-led, not a claim of pixel identity: real categor
 
 ## Verification
 
-See [TESTING.md](../TESTING.md) for commands, browser coverage, CI evidence and remaining verification limits. Tests run against isolated synthetic data, never the production user's browser storage.
+**Passed:** dependency installation, syntax checks, 43 unit tests, build, and 63 browser scenarios across Chromium, Firefox and WebKit. [Verified implementation run](https://github.com/givi588/category-dashboard/actions/runs/44287927590). See [TESTING.md](../TESTING.md) for commands, browser coverage, CI evidence and remaining verification limits. Tests run against isolated synthetic data, never the production user's browser storage.
