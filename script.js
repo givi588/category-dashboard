@@ -64,7 +64,7 @@ function renderActivity() {
   const toggle = document.getElementById("activity-toggle");
   toggle.textContent = showAllActivity ? "Show less" : "View all";
   toggle.setAttribute("aria-expanded", String(showAllActivity));
-  toggle.disabled = activity.events.length <= 4;
+  toggle.disabled = activity.events.length === 0;
 }
 
 const form = document.getElementById("category-form");
@@ -335,6 +335,7 @@ function renderChart() {
     bar.append(value);
     const label = document.createElement("span");
     label.className = "chart-label";
+    label.title = category.name;
     label.textContent = category.name;
     label.setAttribute("title", category.name);
     column.append(bar, label);
