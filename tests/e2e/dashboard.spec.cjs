@@ -242,6 +242,7 @@ test('dialog traps focus, cancels on Escape, and records only saved activity', a
   await expect(page.locator('#activity-list')).toContainText('No activity recorded');
   await add(page, 'Books');
   await expect(page.locator('#activity-list')).toContainText('Category created: “Books”');
+  await expect(page.locator('#add-category-button')).toBeFocused();
   await page.reload();
   await expect(page.locator('#activity-list')).toContainText('Category created: “Books”');
   await expect(page.locator('#average-items')).toHaveText('11.3');

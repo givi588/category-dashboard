@@ -195,6 +195,7 @@ function submitCategory(event) {
   resetEditor();
   updateDashboard();
   showCategories();
+  document.getElementById("add-category-button").focus({ preventScroll: true });
   setImportMessage(wasEditing ? "Category updated." : "Category added.", "success");
   setMessage(wasEditing ? "Category updated." : "Category added.", "success");
 }
@@ -597,6 +598,20 @@ document.getElementById("global-search").addEventListener("keydown", event => { 
 document.getElementById("chart-limit").addEventListener("change", renderChart);
 document.getElementById("add-category-button").addEventListener("click", () => { resetEditor(); setMessage(""); openEditor(); });
 document.getElementById("close-editor").addEventListener("click", () => editorDialog.close());
+// Keep keyboard traversal inside the modal, including reverse traversal at its first control.
+editorDialog.addEventListener("keydown", event => {
+  if (event.key !== "Tab") return;
+  const controls = [...editorDialog.querySelectorAll('button:not(:disabled), input:not(:disabled), textarea:not(:disabled), select:not(:disabled)')].filter(control => !control.classList.contains("hidden"));
+  const first = controls[0];
+  const last = controls[controls.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+});
 editorDialog.addEventListener("close", () => { if (!editorDialog.open) { resetEditor(); setMessage(""); } });
 document.getElementById("activity-toggle").addEventListener("click", () => {
   showAllActivity = !showAllActivity;
