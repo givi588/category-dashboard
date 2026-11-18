@@ -158,7 +158,7 @@ footer { display:flex; justify-content:space-between; gap:12px; font-size:10px; 
   #category-chart .chart { min-width:0 !important; height:auto; display:block; }
   .chart-axis, .chart-grid { display:none; }
   .chart-plot { height:auto; border:0; }
-  .chart-columns { display:grid; gap:9px; padding:0 2px; }
+  .chart-columns { display:grid; grid-template-columns:minmax(0,1fr); align-items:stretch; gap:9px; padding:0 2px; }
   .chart-column { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:3px 10px; min-width:0; max-width:none; height:auto; align-items:baseline; }
   .chart-label, .chart-count { position:static; transform:none; font-size:12px; }
   .chart-label { grid-area:1/1; text-align:left; width:auto; max-height:none; overflow:visible; }
