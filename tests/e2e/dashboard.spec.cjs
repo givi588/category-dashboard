@@ -279,6 +279,18 @@ test('reference comparison screenshots with explicitly imported sample inventory
       await page.evaluate(theme => localStorage.setItem('theme', theme), theme);
       await page.reload();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      if (width < 600) {
+        for (const selector of ['.table-scroll', '#category-chart']) {
+          expect(await page.locator(selector).evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+        }
+        for (const button of await page.locator('.category-actions button').all()) {
+          const box = await button.boundingBox();
+          expect(box.width).toBeGreaterThanOrEqual(44);
+          expect(box.x + box.width).toBeLessThanOrEqual(width);
+        }
+        await expect(page.locator('.chart-label')).toHaveText(names);
+        await expect(page.locator('.chart-count')).toHaveText(counts.map(String));
+      }
       const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
       expect(results.violations).toEqual([]);
       await page.evaluate(() => { document.activeElement.blur(); window.scrollTo(0, 0); });

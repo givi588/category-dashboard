@@ -329,6 +329,7 @@ function renderChart() {
     const bar = document.createElement("div");
     bar.className = "chart-bar";
     bar.style.height = (category.items / ceiling * 100) + "%";
+    column.setAttribute("style", "--bar-length: " + (category.items / maximum * 100) + "%");
     const value = document.createElement("span");
     value.className = "chart-count";
     value.textContent = category.items.toLocaleString();
