@@ -71,10 +71,21 @@
           (this.raw === null && this.storage.getItem(LEGACY_KEY) !== this.legacyRaw)) {
         throw new Error("Data changed in another tab. Export your current view, then reload before editing.");
       }
-      // A failed backup or primary write leaves in-memory state unchanged.
+      const previousBackup = this.storage.getItem(PREVIOUS_KEY);
       const previous = this.raw === null ? serialize(this.state) : this.raw;
       this.storage.setItem(PREVIOUS_KEY, previous);
-      this.storage.setItem(KEY, serialized);
+      try {
+        this.storage.setItem(KEY, serialized);
+      } catch (saveError) {
+        try {
+          if (previousBackup === null) this.storage.removeItem(PREVIOUS_KEY);
+          else this.storage.setItem(PREVIOUS_KEY, previousBackup);
+        } catch (rollbackError) {
+          throw new AggregateError([saveError, rollbackError],
+            "The save failed and the previous recovery copy could not be restored.");
+        }
+        throw saveError;
+      }
       this.raw = serialized;
       this.state = state;
       this.blocked = false;
