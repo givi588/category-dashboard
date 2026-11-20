@@ -1,4 +1,4 @@
-# Category Dashboard 2.1 — visual review
+# Category Dashboard 2.1
 
 A small, dependable category manager built with **HTML, CSS, and vanilla JavaScript**. Organize categories, track totals, and keep control of your data without accounts, analytics, or a backend.
 
@@ -28,7 +28,7 @@ Data belongs to this browser and origin. **Clearing site data or losing the devi
 
 ## Interface
 
-The 2.1 branch is a review candidate. **Production remains on 2.0 until explicit owner approval.** Screenshots and results for 2.1 are documented in [the visual review report](docs/VISUAL-REVIEW-v2.1.md). The captures below show the 2.1 review candidate using explicitly imported sample inventory in an isolated test workspace.
+Version 2.1 is published on GitHub Pages. The screenshots below show the 2.1 interface with sample inventory imported into an isolated test workspace. See the [visual review report](docs/VISUAL-REVIEW-v2.1.md) for screenshots and browser coverage.
 
 ![Category Dashboard 2.1 dark desktop](screenshots/v2.1-desktop-dark.png)
 
@@ -81,7 +81,11 @@ The suite starts its own server on port 8080. It uses isolated browser contexts 
 
 See [TESTING.md](TESTING.md) for the actual verification record and remaining limits. Automated accessibility scans are useful checks, not a certification of complete accessibility. The browser suite covers 320, 375, 768 and 1440 px widths in both themes.
 
-GitHub Actions runs syntax, unit, build and browser checks. GitHub Pages serves the static root `index.html`; release packaging is handled separately after verification.
+GitHub Actions runs syntax, unit, build and browser checks. GitHub Pages serves the static root `index.html`. The 2.1 deployment with the recovery fix [completed successfully](https://github.com/givi588/category-dashboard/actions/runs/44811060700).
+
+### Recovery fix
+
+A failed write to browser storage could replace the previous recovery copy with the current data. [PR #3](https://github.com/givi588/category-dashboard/pull/3) restores the original recovery copy if the main write fails. The regression test simulates storage write failures with and without an existing recovery copy. The [post-merge checks](https://github.com/givi588/category-dashboard/actions/runs/44811060717) passed.
 
 ## Data limits
 
@@ -89,21 +93,9 @@ Names: 1–30 characters after trimming, unique without regard to case within ea
 
 ## 2.0 compatibility
 
-`data.js` is unchanged. The `category-dashboard:v1`, `category-dashboard:previous`, `categories`, and `theme` keys retain their existing meaning. Opening the redesigned interface does not write category data or migrate saved records. Backup and transfer controls now live in **Data management**; recently deleted entries and previous-save tools are in **Recovery**.
+The `category-dashboard:v1`, `category-dashboard:previous`, `categories`, and `theme` keys retain their existing meaning. Opening the redesigned interface does not write category data or migrate saved records. Backup and transfer controls now live in **Data management**; recently deleted entries and previous-save tools are in **Recovery**.
 
-## Review 2.1 locally
-
-```sh
-git fetch origin
-git switch feature/dashboard-v2-1-visual
-npm ci
-npm run build
-npm start
-```
-
-Open `http://127.0.0.1:8080` in a separate browser profile for an isolated review. GitHub Pages stays unchanged. No preview deployment is configured for this repository.
-
-### New interface
+## What changed in 2.1
 
 - Compact graphite and mint layout based on the approved reference.
 - Four actual statistics, including average items per category (one decimal place).
@@ -118,3 +110,4 @@ Open `http://127.0.0.1:8080` in a separate browser profile for an isolated revie
 The optional `category-dashboard:activity:v1` log retains the latest 100 events. It is separate from the unchanged category data format and is written only after successful actions. Existing or malformed history is never reset on load. If the log is corrupt or cannot be saved, category operations remain independent and a history warning is displayed. The log is not part of CSV or category JSON backups.
 
 Updated timestamps appear only for matching category snapshots recorded in the retained log. Imported/recovered categories without a subsequent recorded edit show **Not recorded**. JSON export status means that a download was requested; browsers cannot verify that a file was retained on disk.
+
