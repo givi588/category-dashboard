@@ -5,7 +5,7 @@ const category = (name = 'Books') => ({ name, description: 'Notes', items: 4 });
 const state = (categories = [category()], trash = []) => ({ version: 1, categories, trash });
 function memory(initial = {}) {
   const values = new Map(Object.entries(initial));
-  return { values, getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value) };
+  return { values, getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) };
 }
 test('legacy data migrates only on a successful write, leaving original bytes intact', () => {
   const legacy = JSON.stringify([category('Café')]);
@@ -34,16 +34,23 @@ test('storage read access failure does not create sample data', () => {
   assert.equal(store.blocked, true);
   assert.deepEqual(store.state.categories, []);
 });
-test('backup or primary quota failures preserve saved and in-memory categories', () => {
-  for (const failingKey of [D.KEY, D.PREVIOUS_KEY]) {
-    const raw = D.serialize(state());
-    const storage = memory({ [D.KEY]: raw });
-    const store = new D.Store(storage);
-    const write = storage.setItem;
-    storage.setItem = (key, value) => { if (key === failingKey) throw new Error('QuotaExceeded'); write(key, value); };
-    assert.throws(() => store.commit(state([category('Changed')])), /QuotaExceeded/);
-    assert.equal(store.state.categories[0].name, 'Books');
-    assert.equal(storage.getItem(D.KEY), raw);
+test('backup or primary quota failures preserve the current state and recovery copy', () => {
+  const raw = D.serialize(state());
+  for (const previous of [null, D.serialize(state([category('Earlier')]))]) {
+    for (const failingKey of [D.KEY, D.PREVIOUS_KEY]) {
+      const storage = memory({ [D.KEY]: raw });
+      if (previous !== null) storage.setItem(D.PREVIOUS_KEY, previous);
+      const store = new D.Store(storage);
+      const write = storage.setItem;
+      storage.setItem = (key, value) => {
+        if (key === failingKey) throw new Error('QuotaExceeded');
+        write(key, value);
+      };
+      assert.throws(() => store.commit(state([category('Changed')])), /QuotaExceeded/);
+      assert.deepEqual(store.state, state());
+      assert.equal(storage.getItem(D.KEY), raw);
+      assert.equal(storage.getItem(D.PREVIOUS_KEY), previous);
+    }
   }
 });
 test('another tab cannot silently overwrite a newer save', () => {
