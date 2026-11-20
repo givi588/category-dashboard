@@ -1,6 +1,6 @@
 # Category Dashboard 2.1
 
-A small, dependable category manager built with **HTML, CSS, and vanilla JavaScript**. Organize categories, track totals, and keep control of your data without accounts, analytics, or a backend.
+Category Dashboard is a tool for organizing categories and tracking inventory totals. It uses HTML, CSS, and vanilla JavaScript. Your data stays in your browser. The app has no accounts, analytics, or backend.
 
 [Live dashboard](https://givi588.github.io/category-dashboard/) · [Checks](https://github.com/givi588/category-dashboard/actions/workflows/javascript-tests.yml) · [Testing](TESTING.md) · [Data & recovery](docs/DATA.md)
 
@@ -15,12 +15,12 @@ A small, dependable category manager built with **HTML, CSS, and vanilla JavaScr
 - Errors remain visible; corrupt data, quota failures and stale tabs do not silently replace the saved list.
 - Responsive light/dark themes, keyboard navigation, explicit form labels, invalid-field feedback, and live status messages.
 
-A compact graphite and mint workspace brings together overview cards, category analytics, management, backup, and recovery. A collapsible mobile sidebar supports keyboard navigation and Escape. New visitors start in dark mode; saved light/dark preferences remain unchanged. No runtime dependencies, web fonts, external APIs, or decorative animations.
+On mobile, use the sidebar to reach the category list, analytics, backup, and recovery tools. Press Escape to close the menu. The app starts in dark mode on your first visit and uses your saved preference after that. It runs without runtime dependencies, web fonts, external APIs, or decorative animations.
 
 ## Start using it
 
 1. Open the [live dashboard](https://givi588.github.io/category-dashboard/).
-2. Use **Add Category** or a row’s **Edit** button to open the category editor. Search and sorting affect the list, not totals.
+2. Use **Add Category** or a row’s **Edit** button to open the category editor. Search and sorting change what you see in the list. Totals always include all active categories.
 3. Use **Back up JSON** regularly and keep the downloaded file somewhere safe.
 4. To undo a deletion, use **Restore** under Recently deleted. To undo the last change/import, expand **Data recovery → Restore previous save**.
 
@@ -50,7 +50,7 @@ npm run build
 npm start
 ```
 
-Open `http://127.0.0.1:8080`. Use HTTP instead of opening `index.html` as a file: browser storage behavior for `file:` URLs varies. The deployed site requires no build service or Node runtime.
+Open `http://127.0.0.1:8080`. Serve the page over HTTP. Browsers handle storage for `file:` URLs differently, so opening `index.html` directly can give different results. The deployed site requires no build service or Node runtime.
 
 For the browser suite:
 
@@ -60,7 +60,7 @@ npm run build
 npm run test:e2e
 ```
 
-The suite starts its own server on port 8080. It uses isolated browser contexts and synthetic data; it does not touch your live browser data. Reports are in `playwright-report/` and screenshots/traces in `test-results/` (ignored by Git).
+The suite starts its own server on port 8080. It runs with sample data in isolated browser sessions. Reports are in `playwright-report/` and screenshots/traces in `test-results/` (ignored by Git).
 
 ## Architecture
 
@@ -85,7 +85,7 @@ GitHub Actions runs syntax, unit, build and browser checks. GitHub Pages serves 
 
 ### Recovery fix
 
-A failed write to browser storage could replace the previous recovery copy with the current data. [PR #3](https://github.com/givi588/category-dashboard/pull/3) restores the original recovery copy if the main write fails. The regression test simulates storage write failures with and without an existing recovery copy. The [post-merge checks](https://github.com/givi588/category-dashboard/actions/runs/44811060717) passed.
+If a save failed, the recovery copy could end up holding the same data as the current save. [PR #3](https://github.com/givi588/category-dashboard/pull/3) restores the original recovery copy if the main write fails. The regression test simulates storage write failures with and without an existing recovery copy. The [post-merge checks](https://github.com/givi588/category-dashboard/actions/runs/44811060717) passed.
 
 ## Data limits
 
@@ -110,4 +110,3 @@ The `category-dashboard:v1`, `category-dashboard:previous`, `categories`, and `t
 The optional `category-dashboard:activity:v1` log retains the latest 100 events. It is separate from the unchanged category data format and is written only after successful actions. Existing or malformed history is never reset on load. If the log is corrupt or cannot be saved, category operations remain independent and a history warning is displayed. The log is not part of CSV or category JSON backups.
 
 Updated timestamps appear only for matching category snapshots recorded in the retained log. Imported/recovered categories without a subsequent recorded edit show **Not recorded**. JSON export status means that a download was requested; browsers cannot verify that a file was retained on disk.
-
